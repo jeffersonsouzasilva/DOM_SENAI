@@ -21,14 +21,14 @@
 8. Botão para limpar os registros; */
 
 
-function Calcular (event) {
+function calcular (event) {
     event.preventDefault()
 
     console.log("Foi executada a funcao calcular")
 
     let usuario = receberValores() // Passo 1
-    let IdadeCalculada = calcularIdade() //Passo 2
-    let faiEtaria = faixaEtaria() //Passo 3
+    let IdadeCalculada = calcularIdade(usuario.nascimento) //Passo 2
+    let faiEtaria = faixaEtaria(IdadeCalculada) //Passo 3
 
     console.log(faiEtaria)
 
@@ -41,20 +41,28 @@ function Calcular (event) {
 }
 
 
+
+
+
 // Passo 1
 function receberValores() {
     let nomeRecebido =  document.getElementById("nome").value.trim()
-    let nascimentoRecebido =  document.getElementById("nascimento").value
+    let diaRecebido =  document.getElementById("dia-nascimento").value
+    let mesRecebido =  document.getElementById("mes-nascimento").value
+    let anoRecebido =  document.getElementById("ano-nascimento").value
 
     let dadosUsuario = {
         nome: nomeRecebido,
-        diaNascimento: nascimentoRecebido
+        diaNascido: diaRecebido,
+        mesNascido: mesRecebido,
+        anoNascido: anoRecebido
     }
 
     console.log(dadosUsuario)
 
     return dadosUsuario
 }
+
 
 
 
@@ -69,6 +77,7 @@ function calcularIdade (){
     return idade
 
 }
+
 
 
 
@@ -98,6 +107,9 @@ function faixaEtaria (idade){
 }
 
 
+
+
+
 //Passo 4
 function organizarObjeto (dadosUsuario, valorIdade, faixaEtaria ){
     let dataAtual = new Intl.DateTimeFormat ('pt-br', { dateStyle:'short'}).format(Date.now())
@@ -111,8 +123,9 @@ function organizarObjeto (dadosUsuario, valorIdade, faixaEtaria ){
         dataCadastro: dataAtual
     }
 
-    return dadosUsuarioAtualizado
+    return dadosUsuarioAtualizado;
 }
+
 
 
 
@@ -130,6 +143,8 @@ function cadastrarUsuario (dadosUsuario) {
 }
 
 
+
+
 //Passo 6
 function carregarUsuarios (){
     let  listaCarregada = []
@@ -145,6 +160,43 @@ function carregarUsuarios (){
         tabela.innerHTML = `<tr class = "linha-mensagem" >
             <td colspan="4">Nenhum usuario cadastrado :( </td>
         </tr>`
+    }else {
+        montarTabela(listaCarregada)
     }
-    window.addEventListener("DOMContentLoaded" , () => carregarUsuarios()) // escutador de eventos / quando carregar execute a function // Passo 6 esta sendo chamado aqui
+
+    console.log(listaCarregada)
+    
+}
+
+window.addEventListener("DOMContentLoaded" , () => carregarUsuarios()) // escutador de eventos / quando carregar execute a function // Passo 6 esta sendo chamado aqui
+
+
+
+//Passo 7
+function montarTabela(listaUsuarios){
+    let tabela = document.getElementById("corpo-tabela")
+
+    let template = ""
+
+    listaUsuarios.forEach(usuario => { //adicionar cada linha a mais da lista
+        template +=`<tr>   
+        <td data-cell="nome"> ${usuario.nome} </td>
+        <td data-cell="data de nascimento"> ${usuario.nascimento} </td>
+        <td data-cell="idade"> ${usuario.idade}</td>
+        <td data-cell="faixa etária"> ${usuario.faiEtaria} </td> 
+    </tr>` 
+})
+
+    tabela.innerHTML = template;
+}
+
+
+
+
+
+//Passo 8
+function deletarRegistros() {
+    localStorage.removeItem("usuariosCadastrados") // remove o item do localStorage
+
+    window.location.reload() // recarrega a pagina
 }
