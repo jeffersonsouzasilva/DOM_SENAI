@@ -27,7 +27,7 @@ function calcular (event) {
     console.log("Foi executada a funcao calcular")
 
     let usuario = receberValores() // Passo 1
-    let IdadeCalculada = calcularIdade(usuario.nascimento) //Passo 2
+    let IdadeCalculada = calcularIdade(usuario.anoNascido) //Passo 2
     let faiEtaria = faixaEtaria(IdadeCalculada) //Passo 3
 
     console.log(faiEtaria)
@@ -51,6 +51,9 @@ function receberValores() {
     let mesRecebido =  document.getElementById("mes-nascimento").value
     let anoRecebido =  document.getElementById("ano-nascimento").value
 
+    //So funcionou quando adicionei essas tres variaveis para nascimento
+
+
     let dadosUsuario = {
         nome: nomeRecebido,
         diaNascido: diaRecebido,
@@ -58,7 +61,7 @@ function receberValores() {
         anoNascido: anoRecebido
     }
 
-    console.log(dadosUsuario)
+    //console.log(dadosUsuario)
 
     return dadosUsuario
 }
@@ -68,14 +71,17 @@ function receberValores() {
 
 
 //Passo 2
-function calcularIdade (){
+function calcularIdade (anoRecebido){
 
-    let idade = anoNascimento - anoAtual
+    //let idade = anoNascimento - anoAtual
+    //console.log(idade)
 
-    console.log(idade)
+    let dataAtual = new Date(); //retorna um objeto de data com a data e hora atuais
+    let anoAtual = dataAtual.getFullYear();
 
+    let idade = anoAtual - anoRecebido
     return idade
-
+    //depois de adicionar essas informacoes, foi para lista de "pessoas cadastradas"
 }
 
 
@@ -111,16 +117,16 @@ function faixaEtaria (idade){
 
 
 //Passo 4
-function organizarObjeto (dadosUsuario, valorIdade, faixaEtaria ){
+function organizarObjeto (dadosUsuario, idade, faixaEtaria ){
     let dataAtual = new Intl.DateTimeFormat ('pt-br', { dateStyle:'short'}).format(Date.now())
     
     console.log(dataAtual);
     
     let dadosUsuarioAtualizado = {
         ... dadosUsuario,
-        idade: valorIdade,
-        Etaria: faixaEtaria,
-        dataCadastro: dataAtual
+        idadeAtual: idade,
+        Etaria: faixaEtaria
+        //dataCadastro: dataAtual
     }
 
     return dadosUsuarioAtualizado;
@@ -157,6 +163,7 @@ function carregarUsuarios (){
         // se nao tiver nenhum usuario cadastrado, mostrar mensagem //lenth e comprimento
         let tabela = document.getElementById("corpo-tabela") // elemento da tabela no html "corpo-tabela"
 
+        //.getFullYear();
         tabela.innerHTML = `<tr class = "linha-mensagem" >
             <td colspan="4">Nenhum usuario cadastrado :( </td>
         </tr>`
@@ -172,6 +179,7 @@ window.addEventListener("DOMContentLoaded" , () => carregarUsuarios()) // escuta
 
 
 
+
 //Passo 7
 function montarTabela(listaUsuarios){
     let tabela = document.getElementById("corpo-tabela")
@@ -181,9 +189,9 @@ function montarTabela(listaUsuarios){
     listaUsuarios.forEach(usuario => { //adicionar cada linha a mais da lista
         template +=`<tr>   
         <td data-cell="nome"> ${usuario.nome} </td>
-        <td data-cell="data de nascimento"> ${usuario.nascimento} </td>
-        <td data-cell="idade"> ${usuario.idade}</td>
-        <td data-cell="faixa etária"> ${usuario.faiEtaria} </td> 
+        <td data-cell="data de nascimento"> ${usuario.diaNascido + '/' + usuario.mesNascido + '/' + usuario.anoNascido} </td>
+        <td data-cell="idade"> ${usuario.idadeAtual}</td>
+        <td data-cell="faixa etária"> ${usuario.Etaria} </td> 
     </tr>` 
 })
 
